@@ -1,9 +1,17 @@
-demandForecasting
+Introduction
 ==============================
 
-Demand Forecasting task in supply chain
+Demand Forecasting task in supply chain is a very important (+ critical). A good forecasting system not only help you to increase service level, but also help you with decrease your inventory holding cost - This is based on the supply chain triangle
+![alt text](img/image-1.png)
 
-Project Organization
+
+Table of Content
+==============================
+
+
+Repository Structure
+==============================
+<!-- Project Organization
 ------------
 
 ```
@@ -58,7 +66,18 @@ demandForecasting/
 ```
 
 
---------
+-------- -->
 <p><small>Project based on the <a target="_blank" href="https://github.com/Chim-SO/cookiecutter-mlops/">cookiecutter MLOps project template</a>
 that is originally based on <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. 
 #cookiecuttermlops #cookiecutterdatascience</small></p>
+
+High-level system architecture
+==============================
+
+
+Guide to install and run code
+==============================
+
+
+Link to a demo video
+==============================

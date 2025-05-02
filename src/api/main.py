@@ -17,4 +17,5 @@ async def predict(*args, **kwargs):
     pass
 
 if __name__ == "__main__":
+    print("all good")
     pass
