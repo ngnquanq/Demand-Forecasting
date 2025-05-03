@@ -27,7 +27,7 @@ pipeline {
                 script {
                     // Build your Docker image here
                     echo 'Building Docker image...'
-                    sh 'sudo docker build -t $registry .'
+                    sh ' docker build -t $registry .'
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
                                                      usernameVariable: 'DOCKER_USER',
                                                      passwordVariable: 'DOCKER_PASS')]) {
                         sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
-                        sh 'sudo docker push $registry'
+                        sh ' docker push $registry'
                     }
                 }
             }

@@ -1,32 +1,23 @@
 ---
-- name: Build & run Jenkins image on the VM
+- name: Deploy Jenkins with Docker socket access
   hosts: jenkins-vm
   become: yes
-
   tasks:
-    - name: Ensure Docker Engine is present
+    - name: Ensure Docker Engine is installed on the host
       ansible.builtin.apt:
-        pkg:
-          - docker.io        # Debian/Ubuntu package
+        name: docker.io
         state: present
         update_cache: yes
 
-    - name: Copy Dockerfile to remote
-      ansible.builtin.copy:
-        src:  Dockerfile
-        dest: /tmp/Dockerfile
-        mode: "0644"
-
-    - name: Build Jenkins image locally on the VM
+    - name: Build custom Jenkins image (with Docker tools)
       community.docker.docker_image:
         name: jenkins-custom
         tag: latest
         build:
-          path: /tmp
-          dockerfile: Dockerfile
+          path: /tmp  # Assumes Dockerfile already copied
         source: build
 
-    - name: Run (or restart) Jenkins container
+    - name: Run (or restart) Jenkins container with socket and CLI mounts
       community.docker.docker_container:
         name: jenkins
         image: jenkins-custom:latest
@@ -35,4 +26,13 @@
         published_ports:
           - "8080:8080"
           - "50000:50000"
-        user: "0"          
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock"
+          - "/usr/bin/docker:/usr/bin/docker:ro"
+        privileged: true
+        user: "0"
+
+    - name: Add 'jenkins' user to 'docker' group inside container
+      ansible.builtin.command: >
+        docker exec jenkins usermod -aG docker jenkins
+      become: yes

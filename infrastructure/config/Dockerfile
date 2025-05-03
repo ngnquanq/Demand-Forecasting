@@ -20,3 +20,8 @@ RUN curl https://get.docker.com > dockerinstall && chmod 777 dockerinstall && ./
     # Make pytest available system-wide
     ln -s /opt/venv/bin/pytest /usr/local/bin/pytest
 
+# Grant Docker socket access
+RUN groupadd -f docker \
+ && usermod -aG docker jenkins
+
+USER jenkins
