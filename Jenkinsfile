@@ -39,7 +39,7 @@ pipeline {
                     echo 'Building Docker image model image...'
                     sh ' docker build -t $registry .'
                     echo 'Building Docker image jenkins image...'
-                    sh ' docker build -t $jenkins_registry ./infrastructure/config/Dockerfile'
+                    sh ' docker build -t $jenkins_registry ./infrastructure/config/'
                 }
             }
         }
