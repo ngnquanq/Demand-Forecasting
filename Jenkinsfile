@@ -1,10 +1,10 @@
 pipeline {
     agent {
-    docker {
-      image 'docker:stable-dind'
-      args  '-v /var/run/docker.sock:/var/run/docker.sock'
+        docker {
+            image 'docker:stable-dind'
+            args  '-v /var/run/docker.sock:/var/run/docker.sock'
+            }
         }
-    }
 
     environment{
         registry = 'ngnquanq/demand-forecasting'
