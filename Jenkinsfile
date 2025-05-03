@@ -5,7 +5,8 @@ pipeline {
     //         args  '-v /var/run/docker.sock:/var/run/docker.sock'
     //         }
     //     }
-
+    agent any
+    
     environment{
         registry = 'ngnquanq/demand-forecasting'
         registryCredential = 'dockerhub'
