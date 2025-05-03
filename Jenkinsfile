@@ -6,6 +6,12 @@ pipeline {
     //         }
     //     }
     agent any
+
+    parameters{
+        string(name: 'WEBHOOK_URL',
+               defaultValue: 'https://discordapp.com/api/webhooks/1367885671728943114/FGTkAXc478ytK5jqUgj0VGBM_qbmN9xPn745srWb2fcTT5XBD9_gRKxLu_RmlBzAeZW7',
+               description: 'Discord webhook URL for notifications')
+    }
     
     environment{
         registry = 'ngnquanq/demand-forecasting'
@@ -43,6 +49,13 @@ pipeline {
                 }
             }
         }
-        
+    }
+    post {
+        success {
+        discordSend description: 'Build succeeded!', webhookURL: 'https://discordapp.com/api/webhooks/1367885671728943114/FGTkAXc478ytK5jqUgj0VGBM_qbmN9xPn745srWb2fcTT5XBD9_gRKxLu_RmlBzAeZW7'
+        }
+        failure {
+        discordSend description: 'Build failed!', webhookURL: 'https://discordapp.com/api/webhooks/1367885671728943114/FGTkAXc478ytK5jqUgj0VGBM_qbmN9xPn745srWb2fcTT5XBD9_gRKxLu_RmlBzAeZW7'
+        }
     }
 }
