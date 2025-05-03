@@ -20,7 +20,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # 3. Copy the rest of your source & model artefact
 COPY src/ ./src/
-COPY models/random_forest_model.pkl ./models/random_forest_model.pkl
+# COPY models/random_forest_model.pkl ./models/random_forest_model.pkl
 
 # 4. Expose port & declare non‑root user for k8s best practice
 EXPOSE 8000
