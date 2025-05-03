@@ -51,6 +51,11 @@ pipeline {
                                                      passwordVariable: 'DOCKER_PASS')]) {
                         sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
                         sh ' docker push $registry'
+                        sh ' docker push $jenkins_registry'
+                        echo 'Pushing Docker image to Docker Hub...'
+                        echo 'Pushing Docker image to Docker Hub jenkins image...'
+                        echo 'Docker image pushed successfully!'
+                        echo 'Docker image pushed successfully jenkins image!'
                     }
                 }
             }
