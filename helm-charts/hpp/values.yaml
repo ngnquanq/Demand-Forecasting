@@ -1,0 +1,4 @@
+image:
+  repository: ngnquanq/demand-forecasting
+  tag: latest
+  pullPolicy: Always

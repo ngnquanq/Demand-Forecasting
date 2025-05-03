@@ -32,29 +32,9 @@ resource "google_compute_firewall" "default" {
 
   source_ranges = ["0.0.0.0/0"]
 }
-
-resource "google_container_cluster" "standard" {
+resource "google_container_cluster" "application-gke" {
   name     = var.gke_name
   location = var.region
 
-  release_channel { channel = "REGULAR" }  # automatic version bumps :contentReference[oaicite:5]{index=5}
-  remove_default_node_pool = true
-  initial_node_count       = 1  # API requirement
-
-  node_config {
-    preemptible = true
-    machine_type = "e2-medium"  
+  enable_autopilot = true
   }
-#   node_pool {
-#     name       = "primary"
-#     node_count = 2
-#     node_config {
-#       machine_type = "e2-standard-2"      
-#       oauth_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
-#     }
-#     management {
-#       auto_repair  = true
-#       auto_upgrade = true
-#     }
-#   }
-}

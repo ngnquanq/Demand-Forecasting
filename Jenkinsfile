@@ -53,44 +53,22 @@ pipeline {
             }
         }
         stage('Deploy') {
-        steps {
-            // inject your kubeconfig so both kubectl and helm can authenticate
-            withCredentials([file(credentialsId: 'gke-kubeconfig', variable: 'KUBECONFIG')]) {
-            script {
-                // 1) grab the external IP, explicitly using your GKE context
-                env.EXT_IP = sh(
-                script: "kubectl --kubeconfig=\$KUBECONFIG --context=gke_global-phalanx-449403-d2_us-central1_demandforecasting-gke get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'",
-                returnStdout: true
-                ).trim()
-                echo "External IP is: ${env.EXT_IP}"
-
-                // 2) build a nip.io host so we don’t need real DNS
-                env.INGRESS_HOST = "${env.EXT_IP}.nip.io"
-                echo "Using hostname: ${env.INGRESS_HOST}"
-
-                // 3) perform the helm upgrade/install, pointing at the same context
-                sh """
-                helm --kubeconfig \$KUBECONFIG --kube-context gke_global-phalanx-449403-d2_us-central1_demandforecasting-gke \
-                    upgrade --install ${HELM_RELEASE_NAME} ${HELM_CHART_PATH} \
-                    --namespace ${KUBE_NAMESPACE} \
-                    --set image.repository=${registry} \
-                    --set image.tag=${env.BUILD_ID} \
-                    --set service.type=ClusterIP \
-                    --set service.port=8000 \
-                    --set ingress.enabled=true \
-                    --set ingress.className=nginx \
-                    --set ingress.annotations."nginx\\.ingress\\.kubernetes\\.io/rewrite-target"=/ \
-                    --set ingress.hosts[0].host=${INGRESS_HOST} \
-                    --set ingress.hosts[0].paths[0].path=/ \
-                    --set ingress.hosts[0].paths[0].pathType=Prefix
-                """
+            agent {
+                kubernetes {
+                    containerTemplate{
+                        name 'helm'
+                        image 'ngnquanq/custom-jenkins:latest'
+                        alwaysPullImage true
+                    }
+                }
             }
+            steps {
+                script {
+                    container('helm'){
+                        sh("helm upgrade --install hpp ./helm-charts/hpp --namespace model-serving")
+                    }
+                }
             }
-        }
-        }
-
-
-
         }
     
     post {

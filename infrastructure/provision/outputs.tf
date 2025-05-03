@@ -5,5 +5,5 @@ output "vm_ip" {
 
 output "kubeconfig" {
   description = "kubectl config for the cluster"
-  value       = google_container_cluster.standard.endpoint
+  value       = google_container_cluster.application-gke.endpoint 
 }
