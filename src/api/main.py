@@ -14,7 +14,7 @@ async def predict(*args, **kwargs):
     """
     Predict the output based on the input features.
     """
-    pass
+    return {"message": "Prediction endpoint"}
 
 if __name__ == "__main__":
     print("all good")

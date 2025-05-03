@@ -77,7 +77,11 @@ High-level system architecture
 
 Guide to install and run code
 ==============================
+## 1. To get data:
 
+## 2. Connect to K8s - grant permssion via bind
+
+## 3. Setup credential on JenkinsVM
 
 Link to a demo video
 ==============================

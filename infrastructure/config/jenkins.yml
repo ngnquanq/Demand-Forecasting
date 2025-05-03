@@ -1,0 +1,38 @@
+---
+- name: Build & run Jenkins image on the VM
+  hosts: jenkins-vm
+  become: yes
+
+  tasks:
+    - name: Ensure Docker Engine is present
+      ansible.builtin.apt:
+        pkg:
+          - docker.io        # Debian/Ubuntu package
+        state: present
+        update_cache: yes
+
+    - name: Copy Dockerfile to remote
+      ansible.builtin.copy:
+        src:  Dockerfile
+        dest: /tmp/Dockerfile
+        mode: "0644"
+
+    - name: Build Jenkins image locally on the VM
+      community.docker.docker_image:
+        name: jenkins-custom
+        tag: latest
+        build:
+          path: /tmp
+          dockerfile: Dockerfile
+        source: build
+
+    - name: Run (or restart) Jenkins container
+      community.docker.docker_container:
+        name: jenkins
+        image: jenkins-custom:latest
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "8080:8080"
+          - "50000:50000"
+        user: "0"          

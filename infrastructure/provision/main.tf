@@ -21,6 +21,18 @@ resource "google_compute_instance" "vm" {
   EOS
 }
 
+resource "google_compute_firewall" "default" {
+  name    = "${var.vm_name}-allow-http"
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8080","50000"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
+
 resource "google_container_cluster" "standard" {
   name     = var.gke_name
   location = var.region

@@ -1,0 +1,7 @@
+[jenkins-vm]
+34.57.40.67 ansible_user=nhatquang ansible_ssh_private_key_file=/home/nhatquang/.ssh/google_compute_engine
+
+; kubeconfig = "35.193.112.204"
+; vm_ip = "34.57.40.67"
+; 4cc9b0a2f2a849e8bf3ef70d86ac5335
+; http://34.57.40.67:8080/
