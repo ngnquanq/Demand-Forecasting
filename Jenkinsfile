@@ -15,6 +15,7 @@ pipeline {
     
     environment {
         registry            = 'ngnquanq/demand-forecasting'
+        jenkins_registry   = 'ngnquanq/custom-jenkins'
         registryCredential  = 'dockerhub'
         HELM_RELEASE_NAME   = 'application'
         HELM_CHART_PATH     = './helm/application'
@@ -35,8 +36,10 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    echo 'Building Docker image...'
+                    echo 'Building Docker image model image...'
                     sh ' docker build -t $registry .'
+                    echo 'Building Docker image jenkins image...'
+                    sh ' docker build -t $jenkins_registry ./infrastructure/config/Dockerfile'
                 }
             }
         }
