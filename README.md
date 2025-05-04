@@ -2,8 +2,7 @@ Introduction
 ==============================
 
 Demand Forecasting task in supply chain is a very important (+ critical). A good forecasting system not only help you to increase service level, but also help you with decrease your inventory holding cost - This is based on the supply chain triangle
-![alt text](img/image-1.png)
-
+![System Overview](assets/image-1.png)
 
 Table of Content
 ==============================
@@ -85,3 +84,5 @@ Guide to install and run code
 
 Link to a demo video
 ==============================
+
+[def]: img/image-1.png

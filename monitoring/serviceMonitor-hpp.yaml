@@ -1,0 +1,19 @@
+# monitoring/servicemonitor-hpp.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: hpp-service-monitor
+  namespace: monitoring
+  labels:
+    release: prometheus-stack   # must match your chart’s serviceMonitorSelector
+spec:
+  selector:
+    matchLabels:
+      app: hpp                  # Kubernetes label on your Service/Pods
+  namespaceSelector:
+    matchNames:
+      - model-serving      
+  endpoints:
+    - port: metrics             # name of the port in your Service (you’ll add this)
+      interval: 30s             # scrape every 30 seconds
+      path: /metrics            # your app’s Prometheus metrics path
