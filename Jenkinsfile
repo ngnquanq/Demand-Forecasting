@@ -75,7 +75,7 @@ pipeline {
                     container('helm'){
                         sh("helm repo add prometheus-community https://prometheus-community.github.io/helm-charts")
                         sh("helm repo update")
-                        sh("helm dependency update")
+                        // sh("helm dependency update")
                         sh("helm upgrade --install hpp ./helm-charts/hpp --namespace model-serving")
                         
                     }
