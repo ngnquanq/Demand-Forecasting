@@ -1,0 +1,15 @@
+image:
+  repository: docker.io/ngnquanq/demand-forecasting
+  tag: latest
+  pullPolicy: Always
+
+persistence:
+  logs:
+    enabled: true
+    storageClass: "standard"  # or your preferred storage class
+    size: 1Gi
+
+service:
+  type: LoadBalancer
+  port: 8000
+  targetPort: 8000

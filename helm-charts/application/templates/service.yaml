@@ -9,8 +9,8 @@ spec:
   selector:
     app: {{ .Release.Name }}
   ports:
-    - port: 30000
-      name: metrics
+    - name: http
+      port: 8000
+      targetPort: 8000
       protocol: TCP
-      targetPort: 8000 # This is the port that the application is listening on (pod)
   type: LoadBalancer

@@ -79,6 +79,26 @@ Guide to install and run code
 ## 1. To get data:
 
 ## 2. Connect to K8s - grant permssion via bind
+```shell
+gcloud auth login
+gcloud container clusters get-credentials application-gke --region us-central1 --project global-phalanx-449403-d2
+kubectl create ns model-serving
+kubectl create clusterrolebinding model-serving-admin-binding \
+  --clusterrole=admin \
+  --serviceaccount=model-serving:default \
+  --namespace=model-serving
+
+kubectl create clusterrolebinding anonymous-admin-binding \
+  --clusterrole=admin \
+  --user=system:anonymous \
+  --namespace=model-serving
+
+# Use helm to deploy the application 
+helm install application ./helm-charts/hpp 
+# Wait for around 3 minutes then check for the external ip
+kubectl get svc -n model-serving
+curl http://<external-ip>:8000/docs # to access the swagger
+```
 
 ## 3. Setup credential on JenkinsVM
 

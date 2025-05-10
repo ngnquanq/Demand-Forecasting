@@ -14,22 +14,11 @@
 *.swp
 *.bak
 *.tmp
+*.orig
 *~
 # Various IDEs
 .project
 .idea/
 *.tmproj
-# helm/charts
-OWNERS
-hack/
-ci/
-kube-prometheus-*.tgz
-
-unittests/
-files/dashboards/
-
-UPGRADE.md
-CONTRIBUTING.md
-.editorconfig
-
+.vscode/
 *.csv

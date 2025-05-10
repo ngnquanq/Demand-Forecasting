@@ -14,10 +14,24 @@
 *.swp
 *.bak
 *.tmp
-*.orig
 *~
 # Various IDEs
 .project
 .idea/
 *.tmproj
-.vscode/
+# helm/charts
+OWNERS
+hack/
+ci/
+kube-prometheus-*.tgz
+terraform-*/
+unittests/
+files/dashboards/
+
+UPGRADE.md
+CONTRIBUTING.md
+.editorconfig
+terraform-provider-google_v6.33.0_x5
+*.csv
+random_forest_model.pkl
+sales_forecast_pipeline_rf.pkl

@@ -6,7 +6,7 @@ metadata:
     app: {{ .Release.Name }}
   namespace: model-serving
 spec:
-  replicas: 2
+  replicas: 1  # Changed to 1 since we're using ReadWriteOnce PVC
   selector:
     matchLabels:
       app: {{ .Release.Name }}
@@ -19,3 +19,9 @@ spec:
         - name: {{ .Release.Name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          volumeMounts:
+            - name: logs
+              mountPath: /var/log/container
+      volumes:
+        - name: logs
+          emptyDir: {}  # Changed to emptyDir for temporary storage 
