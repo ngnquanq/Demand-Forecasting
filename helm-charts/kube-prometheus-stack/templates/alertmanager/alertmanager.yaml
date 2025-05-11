@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: Alertmanager
 metadata:
   name: {{ template "kube-prometheus-stack.alertmanager.crname" . }}
-  namespace: {{ template "kube-prometheus-stack-alertmanager.namespace" . }}
+  namespace: {{ template "kube-prometheus-stack.namespace" . }}
   labels:
     app: {{ template "kube-prometheus-stack.name" . }}-alertmanager
 {{ include "kube-prometheus-stack.labels" . | indent 4 }}
@@ -23,18 +23,14 @@ spec:
   {{- else }}
   image: "{{ $registry }}/{{ .Values.alertmanager.alertmanagerSpec.image.repository }}"
   {{- end }}
-  version: {{ default .Values.alertmanager.alertmanagerSpec.image.tag .Values.alertmanager.alertmanagerSpec.version }}
+  version: {{ .Values.alertmanager.alertmanagerSpec.image.tag }}
   {{- if .Values.alertmanager.alertmanagerSpec.image.sha }}
   sha: {{ .Values.alertmanager.alertmanagerSpec.image.sha }}
   {{- end }}
 {{- end }}
   replicas: {{ .Values.alertmanager.alertmanagerSpec.replicas }}
   listenLocal: {{ .Values.alertmanager.alertmanagerSpec.listenLocal }}
-  {{- if .Values.alertmanager.alertmanagerSpec.serviceName }}
-  serviceName: {{ tpl .Values.alertmanager.alertmanagerSpec.serviceName . }}
-  {{- end }}
   serviceAccountName: {{ template "kube-prometheus-stack.alertmanager.serviceAccountName" . }}
-  automountServiceAccountToken: {{ .Values.alertmanager.alertmanagerSpec.automountServiceAccountToken }}
 {{- if .Values.alertmanager.alertmanagerSpec.externalUrl }}
   externalUrl: "{{ tpl .Values.alertmanager.alertmanagerSpec.externalUrl . }}"
 {{- else if and .Values.alertmanager.ingress.enabled .Values.alertmanager.ingress.hosts }}
@@ -50,10 +46,6 @@ spec:
   logFormat: {{ .Values.alertmanager.alertmanagerSpec.logFormat | quote  }}
   logLevel:  {{ .Values.alertmanager.alertmanagerSpec.logLevel | quote  }}
   retention: {{ .Values.alertmanager.alertmanagerSpec.retention | quote  }}
-  {{- with .Values.alertmanager.enableFeatures }}
-  enableFeatures:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
 {{- if .Values.alertmanager.alertmanagerSpec.secrets }}
   secrets:
 {{ toYaml .Values.alertmanager.alertmanagerSpec.secrets | indent 4 }}
@@ -67,13 +59,13 @@ spec:
 {{- end }}
 {{- if .Values.alertmanager.alertmanagerSpec.alertmanagerConfigSelector }}
   alertmanagerConfigSelector:
-{{ tpl (toYaml .Values.alertmanager.alertmanagerSpec.alertmanagerConfigSelector | indent 4) . }}
+{{ toYaml .Values.alertmanager.alertmanagerSpec.alertmanagerConfigSelector | indent 4}}
 {{ else }}
   alertmanagerConfigSelector: {}
 {{- end }}
 {{- if .Values.alertmanager.alertmanagerSpec.alertmanagerConfigNamespaceSelector }}
   alertmanagerConfigNamespaceSelector:
-{{ tpl (toYaml .Values.alertmanager.alertmanagerSpec.alertmanagerConfigNamespaceSelector | indent 4) . }}
+{{ toYaml .Values.alertmanager.alertmanagerSpec.alertmanagerConfigNamespaceSelector | indent 4}}
 {{ else }}
   alertmanagerConfigNamespaceSelector: {}
 {{- end }}
@@ -103,10 +95,6 @@ spec:
 {{- if .Values.alertmanager.alertmanagerSpec.storage }}
   storage:
 {{ tpl (toYaml .Values.alertmanager.alertmanagerSpec.storage | indent 4) . }}
-{{- end }}
-{{- with .Values.alertmanager.alertmanagerSpec.persistentVolumeClaimRetentionPolicy }}
-  persistentVolumeClaimRetentionPolicy:
-    {{- toYaml . | nindent 4 }}
 {{- end }}
 {{- if .Values.alertmanager.alertmanagerSpec.podMetadata }}
   podMetadata:
@@ -176,28 +164,10 @@ spec:
 {{- if .Values.alertmanager.alertmanagerSpec.clusterAdvertiseAddress }}
   clusterAdvertiseAddress: {{ .Values.alertmanager.alertmanagerSpec.clusterAdvertiseAddress }}
 {{- end }}
-{{- if .Values.alertmanager.alertmanagerSpec.clusterGossipInterval }}
-  clusterGossipInterval: {{ .Values.alertmanager.alertmanagerSpec.clusterGossipInterval }}
-{{- end }}
-{{- if .Values.alertmanager.alertmanagerSpec.clusterPeerTimeout }}
-  clusterPeerTimeout: {{ .Values.alertmanager.alertmanagerSpec.clusterPeerTimeout }}
-{{- end }}
-{{- if .Values.alertmanager.alertmanagerSpec.clusterPushpullInterval }}
-  clusterPushpullInterval: {{ .Values.alertmanager.alertmanagerSpec.clusterPushpullInterval }}
-{{- end }}
-{{- if .Values.alertmanager.alertmanagerSpec.clusterLabel }}
-  clusterLabel: {{ .Values.alertmanager.alertmanagerSpec.clusterLabel }}
-{{- end }}
 {{- if .Values.alertmanager.alertmanagerSpec.forceEnableClusterMode }}
   forceEnableClusterMode: {{ .Values.alertmanager.alertmanagerSpec.forceEnableClusterMode }}
 {{- end }}
 {{- if .Values.alertmanager.alertmanagerSpec.minReadySeconds }}
   minReadySeconds: {{ .Values.alertmanager.alertmanagerSpec.minReadySeconds }}
-{{- end }}
-{{- with .Values.alertmanager.alertmanagerSpec.additionalConfig }}
-  {{- tpl (toYaml .) $ | nindent 2 }}
-{{- end }}
-{{- with .Values.alertmanager.alertmanagerSpec.additionalConfigString }}
-  {{- tpl . $ | nindent 2 }}
 {{- end }}
 {{- end }}

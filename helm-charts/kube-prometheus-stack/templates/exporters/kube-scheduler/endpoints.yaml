@@ -1,4 +1,4 @@
-{{- if and .Values.kubeScheduler.enabled .Values.kubeScheduler.endpoints .Values.kubernetesServiceMonitors.enabled }}
+{{- if and .Values.kubeScheduler.enabled .Values.kubeScheduler.endpoints }}
 apiVersion: v1
 kind: Endpoints
 metadata:
@@ -14,7 +14,7 @@ subsets:
       - ip: {{ . }}
       {{- end }}
     ports:
-      - name: {{ .Values.kubeScheduler.serviceMonitor.port }}
+      - name: http-metrics
         {{- $kubeSchedulerDefaultInsecurePort := 10251 }}
         {{- $kubeSchedulerDefaultSecurePort := 10259 }}
         port: {{ include "kube-prometheus-stack.kubeScheduler.insecureScrape" (list . $kubeSchedulerDefaultInsecurePort $kubeSchedulerDefaultSecurePort .Values.kubeScheduler.service.port)  }}

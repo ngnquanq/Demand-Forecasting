@@ -1,7 +1,6 @@
 {{- if and .Values.alertmanager.enabled .Values.alertmanager.ingress.enabled }}
 {{- $pathType := .Values.alertmanager.ingress.pathType | default "ImplementationSpecific" }}
 {{- $serviceName := printf "%s-%s" (include "kube-prometheus-stack.fullname" .) "alertmanager" }}
-{{- $backendServiceName := .Values.alertmanager.ingress.serviceName | default (printf "%s-%s" (include "kube-prometheus-stack.fullname" .) "alertmanager") }}
 {{- $servicePort := .Values.alertmanager.ingress.servicePort | default .Values.alertmanager.service.port -}}
 {{- $routePrefix := list .Values.alertmanager.alertmanagerSpec.routePrefix }}
 {{- $paths := .Values.alertmanager.ingress.paths | default $routePrefix -}}
@@ -11,10 +10,10 @@ apiVersion: {{ include "kube-prometheus-stack.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ $serviceName }}
-  namespace: {{ template "kube-prometheus-stack-alertmanager.namespace" . }}
+  namespace: {{ template "kube-prometheus-stack.namespace" . }}
 {{- if .Values.alertmanager.ingress.annotations }}
   annotations:
-    {{- tpl (toYaml .Values.alertmanager.ingress.annotations) . | nindent 4 }}
+{{ toYaml .Values.alertmanager.ingress.annotations | indent 4 }}
 {{- end }}
   labels:
     app: {{ template "kube-prometheus-stack.name" . }}-alertmanager
@@ -31,7 +30,7 @@ spec:
   rules:
   {{- if .Values.alertmanager.ingress.hosts }}
   {{- range $host := .Values.alertmanager.ingress.hosts }}
-    - host: {{ tpl $host $ | quote }}
+    - host: {{ tpl $host $ }}
       http:
         paths:
   {{- range $p := $paths }}
@@ -42,11 +41,11 @@ spec:
             backend:
               {{- if $apiIsStable }}
               service:
-                name: {{ $backendServiceName }}
+                name: {{ $serviceName }}
                 port:
                   number: {{ $servicePort }}
               {{- else }}
-              serviceName: {{ $backendServiceName }}
+              serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
     {{- end }}
     {{- end -}}
@@ -62,11 +61,11 @@ spec:
             backend:
               {{- if $apiIsStable }}
               service:
-                name: {{ $backendServiceName }}
+                name: {{ $serviceName }}
                 port:
                   number: {{ $servicePort }}
               {{- else }}
-              serviceName: {{ $backendServiceName }}
+              serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
   {{- end }}
   {{- end -}}

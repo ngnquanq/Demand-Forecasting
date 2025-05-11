@@ -1,4 +1,4 @@
-{{- if and .Values.kubeProxy.enabled .Values.kubeProxy.endpoints .Values.kubernetesServiceMonitors.enabled }}
+{{- if and .Values.kubeProxy.enabled .Values.kubeProxy.endpoints }}
 apiVersion: v1
 kind: Endpoints
 metadata:
@@ -14,7 +14,7 @@ subsets:
       - ip: {{ . }}
       {{- end }}
     ports:
-      - name: {{ .Values.kubeProxy.serviceMonitor.port }}
+      - name: http-metrics
         port: {{ .Values.kubeProxy.service.port }}
         protocol: TCP
 {{- end }}

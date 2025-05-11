@@ -81,7 +81,7 @@ Guide to install and run code
 ## 2. Connect to K8s - grant permssion via bind
 ```shell
 gcloud auth login
-gcloud container clusters get-credentials application-gke --region us-central1 --project global-phalanx-449403-d2
+gcloud container clusters get-credentials application-gke --zone us-central1-a --project global-phalanx-449403-d2
 kubectl create ns model-serving
 kubectl create clusterrolebinding model-serving-admin-binding \
   --clusterrole=admin \
@@ -92,14 +92,46 @@ kubectl create clusterrolebinding anonymous-admin-binding \
   --clusterrole=admin \
   --user=system:anonymous \
   --namespace=model-serving
-
-# Use helm to deploy the application 
-helm install application ./helm-charts/hpp 
-# Wait for around 3 minutes then check for the external ip
-kubectl get svc -n model-serving
-curl http://<external-ip>:8000/docs # to access the swagger
 ```
-
+## 3. Build the application with helm
+```shell
+kubens model-serving
+# Use helm to deploy the application 
+helm install application ./helm-charts/application 
+# Wait for around 3 minutes then check for the external ip
+kubectl get svc -n model-serving -w # ctrl c when the external ip appear
+curl http://<external-ip>:8000/docs # to check if swagger is up
+```
+Remember that for these to work, the time zone/time must be the same as other people
+## 4. Build the elk stack for logging
+```shell
+# now create ns for logging
+kubectl create namespace logging
+kubens logging  
+# deploy the elk stack
+helm install elasticsearch elastic/elasticsearch -f ./helm-charts/elk/elasticsearch-values.yaml
+helm install filebeat elastic/filebeat -f ./helm-charts/elk/filebeat-values.yaml
+helm install logstash elastic/logstash -f ./helm-charts/elk/logstash-values.yaml
+helm install kibana elastic/kibana -f ./helm-charts/elk/kibana-values.yaml
+# wait for about 5 minutues and then use port-forward to navigate to kibana
+kubectl port-forward --namespace logging $(kubectl get pod --namespace logging --selector="app=kibana,release=kibana" --output jsonpath='{.items[0].metadata.name}') 8080:5601
+# Now we need a username and the password. To get username:
+kubectl get secret elasticsearch-master-credentials -o jsonpath="{.data.username}" | base64 --decode
+# To get password: 
+kubectl get secret elasticsearch-master-credentials -o jsonpath="{.data.password}" | base64 --decode
+# Now navigate to the localhost:8080 and sign in with those credential
+```
+## 5. Now we build the monitoring w grafana and prometheus
+```shell
+kubectl create 
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add stable https://charts.helm.sh/stable
+helm repo update
+helm pull prometheus-community/kube-prometheus-stack --version 45.7.1
+tar -xzf kube-prometheus-stack-45.7.1.tgz
+rm kube-prometheus-stack-45.7.1.tgz
+helm install monitoring ./kube-prometheus-stack/
+```
 ## 3. Setup credential on JenkinsVM
 
 Link to a demo video

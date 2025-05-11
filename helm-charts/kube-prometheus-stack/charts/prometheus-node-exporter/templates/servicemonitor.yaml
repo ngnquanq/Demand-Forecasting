@@ -16,10 +16,6 @@ spec:
   podTargetLabels:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.prometheus.monitor.targetLabels }}
-  targetLabels:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   selector:
     matchLabels:
     {{- with .Values.prometheus.monitor.selectorOverride }}
@@ -27,10 +23,6 @@ spec:
     {{- else }}
       {{- include "prometheus-node-exporter.selectorLabels" . | nindent 6 }}
     {{- end }}
-  {{- with .Values.prometheus.monitor.attachMetadata }}
-  attachMetadata:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   endpoints:
     - port: {{ .Values.service.portName }}
       scheme: {{ .Values.prometheus.monitor.scheme }}
