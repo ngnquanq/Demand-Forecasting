@@ -78,9 +78,14 @@ Looking at a high-level view, this is what the system look like:
 
 Guide to install and run code
 ==============================
-## 1. To get data:
+## 1. To get data.
+For learning purpose, the data is already in here :), it is small tho. However, you can reference to this [link](https://www.kaggle.com/datasets/aswathrao/demand-forecasting) for more detail.
+## Setup related to the 
+## Setup related to the Virtual Machine
 
-## 2. Connect to K8s - grant permssion via bind
+
+## Setup related to the Kubernetes Cluster
+### 1. Connect to K8s - grant permssion via bind
 ```shell
 gcloud auth login
 gcloud container clusters get-credentials application-gke --zone us-central1-a --project global-phalanx-449403-d2
@@ -95,7 +100,7 @@ kubectl create clusterrolebinding anonymous-admin-binding \
   --user=system:anonymous \
   --namespace=model-serving
 ```
-## 3. Build the application with helm
+### 2. Build the application with helm
 ```shell
 kubens model-serving
 # Use helm to deploy the application 
@@ -105,7 +110,7 @@ kubectl get svc -n model-serving -w # ctrl c when the external ip appear
 curl http://<external-ip>:8000/docs # to check if swagger is up
 ```
 Remember that for these to work, the time zone/time must be the same as other people
-## 4. Build the elk stack for logging
+### 3. Build the elk stack for logging
 ```shell
 # now create ns for logging
 kubectl create namespace logging
@@ -123,7 +128,7 @@ kubectl get secret elasticsearch-master-credentials -o jsonpath="{.data.username
 kubectl get secret elasticsearch-master-credentials -o jsonpath="{.data.password}" | base64 --decode
 # Now navigate to the localhost:8080 and sign in with those credential
 ```
-## 5. Now we build the monitoring w grafana and prometheus
+### 4. Now we build the monitoring w grafana and prometheus
 ```shell
 kubectl create 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
