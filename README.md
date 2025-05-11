@@ -72,6 +72,8 @@ that is originally based on <a target="_blank" href="https://drivendata.github.i
 
 High-level system architecture
 ==============================
+Looking at a high-level view, this is what the system look like:
+![High-level system architecture](assets/architecture.png)
 
 
 Guide to install and run code
@@ -132,7 +134,6 @@ tar -xzf kube-prometheus-stack-45.7.1.tgz
 rm kube-prometheus-stack-45.7.1.tgz
 helm install monitoring ./kube-prometheus-stack/
 ```
-## 3. Setup credential on JenkinsVM
 
 Link to a demo video
 ==============================
