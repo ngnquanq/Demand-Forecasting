@@ -5,6 +5,8 @@ from fastapi.responses import JSONResponse
 import logging
 import time
 
+# In need for an OpenTelemetry collector with OLTP exporter
+
 # Configure logger
 logger = logging.getLogger('app')
 
@@ -32,7 +34,7 @@ async def root():
     logger.info("Root endpoint called")
     return {"message": "Hello World"}
 
-@app.get("/predict")
+@app.post("/predict")
 async def predict(*args, **kwargs):
     """
     Predict the output based on the input features.
@@ -41,7 +43,7 @@ async def predict(*args, **kwargs):
     try:
         # Your prediction logic here
         logger.info("Prediction completed successfully")
-        return {"message": "Prediction endpoint"}
+        return {"message": "Prediction endpoint success"}
     except Exception as e:
         logger.error(f"Prediction failed: {str(e)}")
         return JSONResponse(
