@@ -3,4 +3,15 @@ pandas==2.2.3
 numpy==1.24.3
 pydantic
 typing-extensions
+statsmodels
 kaggle
+skforecast==0.15
+pytest==8.3.5
+lightgbm==4.6.0
+plotly==6.1.0
+shap==0.47.2
+catboost==1.2.8
+xgboost ==3.0.1
+feature_engine==1.8.3
+astral==3.2
+nbformat>=4.2.0
